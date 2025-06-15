@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Me | Portfolio</title>
   <link rel="icon" href="favicon.png" type="image/png"/>
-  <!-- Font Awesome for GitHub icon only -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     :root {
@@ -34,14 +33,17 @@
       width: 100%;
       background: var(--nav-bg);
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       padding: 0.8rem 2rem;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
       z-index: 1000;
     }
     .nav-left img {
       height: 40px;
+    }
+    .nav-center {
+      display: flex;
     }
     .nav-center ul {
       display: flex;
@@ -59,29 +61,34 @@
     .nav-center a:hover {
       color: var(--link-hover);
     }
-    .nav-right .dark-toggle {
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .dark-toggle, .hamburger {
       background: transparent;
       border: none;
       color: white;
       font-size: 1.5rem;
       cursor: pointer;
-      transition: color 0.3s;
+      padding: 0;
+      line-height: 1;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
-      line-height: 1;
-      height: 40px;
-      width: 40px;
-      margin-right: 40px;
+      transition: background 0.2s, color 0.2s;
+      margin-right: 50px;
     }
-    .nav-right .dark-toggle:hover {
+    .dark-toggle:hover, .hamburger:hover {
       color: #ffe082;
       background: rgba(0,0,0,0.05);
       border-radius: 50%;
     }
     header {
-      margin-top: 60px;
+      margin-top: 70px;
       text-align: center;
       background: var(--accent);
       color: white;
@@ -161,16 +168,15 @@
       background: #00bcd4;
       color: white;
       border: none;
-      padding: 4px 6px;
+      padding: 6px;
       border-radius: 50%;
       cursor: pointer;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       display: none;
       z-index: 2000;
-      font-size: 0.85rem;
-      width: 24px;
-      height: 24px;
-      line-height: 1;
+      font-size: 1rem;
+      width: 40px;
+      height: 40px;
       transition: background 0.2s, color 0.2s;
     }
     .back-to-top.show { display: block; }
@@ -207,12 +213,42 @@
     }
     body.dark header { background: var(--accent); }
     body.dark h2 { color: #4fd6ed; border-color: #005f6b; }
-    body.dark .resume-btn { background: #003842; }
-    body.dark .resume-btn:hover { background: #007f9c; }
-    @media(max-width:600px){
-      nav { flex-wrap: wrap; padding: 0.6rem 1rem; }
-      .skills-list, .gallery { grid-template-columns:1fr; }
-      .back-to-top { font-size: 0.7rem; width: 18px; height: 18px; }
+
+    /* MOBILE */
+    @media(max-width: 768px) {
+      .nav-center {
+        display: none;
+        width: 100%;
+      }
+      .nav-center.active {
+        display: flex;
+      }
+      .nav-center ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 0;
+      }
+      header {
+        padding: 4rem 1rem 1rem;
+      }
+      section {
+        padding: 1.2rem;
+      }
+      h1 { font-size: 1.6rem; }
+      h2 { font-size: 1.3rem; }
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+      .gallery-img {
+        height: auto;
+        aspect-ratio: 16/9;
+      }
+      .dark-toggle, .hamburger, .back-to-top {
+        width: 48px;
+        height: 48px;
+        font-size: 1.3rem;
+      }
     }
   </style>
 </head>
@@ -231,9 +267,8 @@
       </ul>
     </div>
     <div class="nav-right">
-      <button id="darkToggle" class="dark-toggle" title="Toggle dark mode">
-        🌙
-      </button>
+      <button class="hamburger" aria-label="Menu">☰</button>
+      <button id="darkToggle" class="dark-toggle" title="Toggle dark mode">🌙</button>
     </div>
   </nav>
 
@@ -308,26 +343,25 @@
     </div>
   </section>
 
-  <!-- Back to Top Button -->
   <button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});">↑</button>
 
   <footer id="contact">
     <p><strong>Contact Info:</strong></p>
-    <p><span>📞</span> +218 919900551 | +218 945749052</p>
-    <p><span>📧</span> taher1088.taher1088@gmail.com</p>
+    <p>📞 +218 919900551 | +218 945749052</p>
+    <p>📧 taher1088.taher1088@gmail.com</p>
     <p><a href="cv_ataher_saleh.pdf.pdf" download class="resume-btn">📄 Download CV</a></p>
     <div class="footer-links">
-      <a href="https://github.com/Ataher-KoW" target="_blank"><i class="fa-brands fa-github"></i></a>
+      <a href="https://github.com/gxgkow" target="_blank"><i class="fa-brands fa-github"></i></a>
     </div>
     <p>Made with 💙 | HTML, CSS & JS | © 2025</p>
   </footer>
 
   <script>
-    // Dark mode toggle with emoji
+    // Dark mode
     const toggle = document.getElementById('darkToggle');
-    const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const saved = localStorage.getItem('theme');
-    if (saved === 'dark' || (!saved && prefers)) {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
       document.body.classList.add('dark');
       toggle.textContent = '☀️';
     }
@@ -338,11 +372,16 @@
       toggle.textContent = isDark ? '☀️' : '🌙';
     };
 
-    // Back to top show/hide logic
+    // Back-to-top
     const toTop = document.querySelector('.back-to-top');
     window.addEventListener('scroll', () => {
       toTop.classList.toggle('show', window.scrollY > 300);
     });
+
+    // Hamburger menu
+    document.querySelector('.hamburger').onclick = () => {
+      document.querySelector('.nav-center').classList.toggle('active');
+    };
   </script>
 </body>
 </html>
